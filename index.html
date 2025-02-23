@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Site Web</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        main {
+            flex: 1;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .image-grid img {
+            width: 100%;
+            height: auto;
+        }
+        footer {
+            background-color: #ca0b0b;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4566789387448303"
+    crossorigin="anonymous"></script>
+    <!-- Google Ads -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-XXXXXXXXXXXXXXXX",
+            enable_page_level_ads: true
+        });
+    </script> -->
+</head>
+<body>
+    <header>
+        <h1>Bienvenue sur mon site web</h1>
+    </header>
+    <main>
+        <section>
+            <h2>À propos de moi</h2>
+            <p>Ceci est un exemple de site web créé avec HTML et CSS.</p>
+        </section>
+        <section>
+            <h2>Contact</h2>
+            <p>Vous pouvez me contacter à l'adresse email@example.com.</p>
+            <form action="https://www.paypal.com/donate" method="post" target="_top">
+                <input type="hidden" name="business" value="tristan.finance.officiel@gmail.com">
+                <input type="hidden" name="no_recurring" value="0">
+                <input type="hidden" name="currency_code" value="EUR">
+                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button">
+                <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+            </form>
+        </section>
+        <section>
+            <h2>Galerie d'images</h2>
+            <div class="image-grid">
+                <img src="https://image.jimcdn.com/app/cms/image/transf/dimension=681x10000:format=jpg/path/sb04a2150b23d29da/image/i9a14465d34d8f88a/version/1556365384/image.jpg" alt="Image 1">
+                <img src="https://image.jimcdn.com/app/cms/image/transf/dimension=681x10000:format=jpg/path/sb04a2150b23d29da/image/i9a14465d34d8f88a/version/1556365384/image.jpg" alt="Image 2">
+                <img src="https://image.jimcdn.com/app/cms/image/transf/dimension=681x10000:format=jpg/path/sb04a2150b23d29da/image/i9a14465d34d8f88a/version/1556365384/image.jpg" alt="Image 3">
+                <img src="https://image.jimcdn.com/app/cms/image/transf/dimension=681x10000:format=jpg/path/sb04a2150b23d29da/image/i9a14465d34d8f88a/version/1556365384/image.jpg" alt="Image 4">
+            </div>
+        </section>
+        <section>
+            <h2>Paiement Stripe</h2>
+            <form id="payment-form">
+                <div id="card-element">
+                    <!-- Stripe Element will be inserted here -->
+                </div>
+                <button type="submit">Payer</button>
+                <div id="card-errors" role="alert"></div>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Mon Site Web. Tous droits réservés.</p>
+    </footer>
+
+    <!-- Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        var stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+        var elements = stripe.elements();
+        var card = elements.create('card');
+        card.mount('#card-element');
+
+        card.on('change', function(event) {
+            var displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            stripe.createToken(card).then(function(result) {
+                if (result.error) {
+                    var errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+                } else {
+                    stripeTokenHandler(result.token);
+                }
+            });
+        });
+
+        function stripeTokenHandler(token) {
+            var form = document.getElementById('payment-form');
+            var hiddenInput = document.createElement('input');
+            hiddenInput.setAttribute('type', 'hidden');
+            hiddenInput.setAttribute('name', 'stripeToken');
+            hiddenInput.setAttribute('value', token.id);
+            form.appendChild(hiddenInput);
+
+            form.submit();
+        }
+    </script>
+</body>
+</html>
